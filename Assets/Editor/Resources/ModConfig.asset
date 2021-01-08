@@ -14,7 +14,13 @@ MonoBehaviour:
   id: ForgetsUltimateShowdownModule
   title: Forget's Ultimate Showdown
   author: Marksam32
-  description: 
-  version: 1.0
+  description: "No, this is not a boss module. Stop being judgeme... Oh wait that's
+    already taken.\r\n\r\nCreated and impelemented by: Marksam32\r\nWith assets used
+    from modules by: Speakingevil, Espik, Hexicube, Royal_Flu$h, VFlyer, Short_c1rcuit,
+    Rdzanu, Pruz and Epictho.\nTwitch plays is supported.\r\n\r\nManual:\r\nPDF: https://github.com/marksam32/ktaneForgetsUltimateShowdown/blob/master/Manual/pdfs/Modules/Forget's%20Ultimate%20Showdown%20%E2%80%94%20Keep%20Talking%20and%20Nobody%20Explodes%20Module.pdf\nHTML:
+    (soon)\n\r\nModule id: ForgetsUltimateShowdownModule\r\nGithub: https://github.com/marksam32/ktaneForgetsUltimateShowdown\r\n\r\nIf
+    you want to report any bugs or typos in the manual or in the module, please contact
+    me on discord: Marksam32#6669"
+  version: 1.02
   outputFolder: build
-  previewImage: {fileID: 0}
+  previewImage: {fileID: 2800000, guid: e2dd4d65a0de7e04bbc8c71250c7dae7, type: 3}

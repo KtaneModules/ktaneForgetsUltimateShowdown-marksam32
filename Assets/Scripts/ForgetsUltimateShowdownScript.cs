@@ -80,6 +80,8 @@ public partial class ForgetsUltimateShowdownScript : MonoBehaviour
     private int _pressIndex;
     private List<int> _presses = new List<int>();
 
+    private const string _version = "1.02";
+
     // Use this for initialization
     void Start()
     {
@@ -91,6 +93,7 @@ public partial class ForgetsUltimateShowdownScript : MonoBehaviour
 
     private void Activate()
     {
+        _logger.LogMessage("Running version {0}", _version);
         for (var i = 0; i < NumberButtons.Length; i++)
         {
             NumberButtons[i].OnInteract += ButtonHandler(i);
@@ -590,7 +593,7 @@ public partial class ForgetsUltimateShowdownScript : MonoBehaviour
             currentText = currentText.Substring(0, currentText.Length - 1);
             ModuleTexts[1].text = currentText;
             yield return new WaitForSeconds(.03f);
-            if (i == 25)
+            if (i == 23)
             {
                 Audio.PlaySoundAtTransform(SFX[2].name, Module.transform);
             }
