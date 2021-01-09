@@ -80,7 +80,7 @@ public partial class ForgetsUltimateShowdownScript : MonoBehaviour
     private int _pressIndex;
     private List<int> _presses = new List<int>();
 
-    private const string _version = "1.02";
+    private const string _version = "1.03";
 
     // Use this for initialization
     void Start()
@@ -483,23 +483,37 @@ public partial class ForgetsUltimateShowdownScript : MonoBehaviour
         Audio.PlaySoundAtTransform(SFX[1].name, Module.transform);
         StartCoroutine(DoSmallDisplayShuffle());
         EncProcess.transform.localPosition = new Vector3(-0.02323988f, 0.0119f, 0.02150016f);
-
-        for (var i = 0; i < 100; i++)
+        
+        for (float x = 0; x <= 1; x = Mathf.Min(x + 1 * Time.deltaTime, 1))
         {
-            ButtonsObject.transform.localPosition -= new Vector3(0f, 0.0000659584f, 0f);
-            yield return new WaitForSeconds(.01f);
+            var localPosition = ButtonsObject.transform.localPosition;
+            var posx = localPosition.x;
+            var posz = localPosition.z;
+            ButtonsObject.transform.localPosition = new Vector3(posx, 0.01799584f * (1 - x) + 0.01140002f * x, posz);
+            if (x >= 1)
+            {
+                break;
+            }
+            yield return new WaitForSeconds(Time.deltaTime);
         }
-
+        
         EncProcess.SetActive(true);
         ButtonsObject.SetActive(false);
-        yield return new WaitForSeconds(1.5f);
+        yield return new WaitForSecondsRealtime(1.5f);
 
-        for (var i = 0; i < 100; i++)
+        for (float x = 0; x <= 1; x = Mathf.Min(x + 1 * Time.deltaTime, 1))
         {
-            EncProcess.transform.localPosition += new Vector3(0f, 0.0000609584f, 0f);
-            yield return new WaitForSeconds(.01f);
+            var localPosition = EncProcess.transform.localPosition;
+            var posx = localPosition.x;
+            var posz = localPosition.z;
+            EncProcess.transform.localPosition = new Vector3(posx, 0.0119f * (1-x) + 0.01799588f * x, posz);
+            if (x >= 1)
+            {
+                break;
+            }
+            yield return new WaitForSeconds(Time.deltaTime);
         }
-        yield return new WaitForSeconds(1f);
+        yield return new WaitForSecondsRealtime(.6f);
         StartCoroutine(WriteText());
     }
 
@@ -509,33 +523,53 @@ public partial class ForgetsUltimateShowdownScript : MonoBehaviour
         _showingInfo = false;
         Audio.PlaySoundAtTransform(SFX[1].name, Module.transform);
         StartCoroutine(DoSmallDisplayShuffle());
-        for (var i = 0; i < 100; i++)
+
+        for (float x = 0; x <= 1; x = Mathf.Min(x + 1 * Time.deltaTime, 1))
         {
-            EncProcess.transform.localPosition -= new Vector3(0f, 0.0000609584f, 0f);
-            yield return new WaitForSeconds(.01f);
+            var localPosition = EncProcess.transform.localPosition;
+            var posx = localPosition.x;
+            var posz = localPosition.z;
+            EncProcess.transform.localPosition = new Vector3(posx, 0.01799588f * (1 - x) + 0.0119f * x, posz);
+            if (x >= 1)
+            {
+                break;
+            }
+            yield return new WaitForSeconds(Time.deltaTime);
         }
 
         EncProcess.SetActive(false);
         ButtonsObject.SetActive(true);
-        yield return new WaitForSeconds(1.5f);
+        yield return new WaitForSecondsRealtime(1.5f);
 
-        for (var i = 0; i < 100; i++)
+        for (float x = 0; x <= 1; x = Mathf.Min(x + 1 * Time.deltaTime, 1))
         {
-            ButtonsObject.transform.localPosition += new Vector3(0f, 0.0000659584f, 0f);
-            yield return new WaitForSeconds(.01f);
+            var localPosition = ButtonsObject.transform.localPosition;
+            var posx = localPosition.x;
+            var posz = localPosition.z;
+            ButtonsObject.transform.localPosition = new Vector3(posx, 0.01140002f * (1 - x) + 0.01799584f * x, posz);
+            if (x >= 1)
+            {
+                break;
+            }
+            yield return new WaitForSeconds(Time.deltaTime);
         }
         
-        yield return new WaitForSeconds(1f);
+        yield return new WaitForSecondsRealtime(0.6f);
         StartCoroutine(ClearOnSumbitModeText());
     }
 
     private IEnumerator DoSmallDisplayShuffle()
     {
         var cycle = Enumerable.Range(0,100).ToList().Shuffle().Select(x => x.ToString("D2")).ToList();
-        for (int i = 0; i < 350; i++)
+        var targetTime = 5f;
+        var elapsed = 0f;
+        var cycleNum = 0;
+        while (elapsed<targetTime)
         {
-            ModuleTexts[0].text = cycle[i % 100];
-            yield return new WaitForSeconds(.01f);
+            ModuleTexts[0].text = cycle[cycleNum % 100];
+            cycleNum++;
+            elapsed += Time.deltaTime;
+            yield return null;
         }
         ModuleTexts[0].text = "--";
     }
@@ -561,7 +595,7 @@ public partial class ForgetsUltimateShowdownScript : MonoBehaviour
         {
             text = text + t;
             ModuleTexts[1].text = text;
-            yield return new WaitForSeconds(.03f);
+            yield return new WaitForSecondsRealtime(.03f);
         }
 
         _animating = false;
@@ -577,7 +611,7 @@ public partial class ForgetsUltimateShowdownScript : MonoBehaviour
         {
             currentText = currentText.Substring(0, currentText.Length - 1);
             ModuleTexts[1].text = currentText;
-            yield return new WaitForSeconds(.03f);
+            yield return new WaitForSecondsRealtime(.03f);
         }
 
         _animating = false;
@@ -592,7 +626,7 @@ public partial class ForgetsUltimateShowdownScript : MonoBehaviour
         {
             currentText = currentText.Substring(0, currentText.Length - 1);
             ModuleTexts[1].text = currentText;
-            yield return new WaitForSeconds(.03f);
+            yield return new WaitForSecondsRealtime(.03f);
             if (i == 23)
             {
                 Audio.PlaySoundAtTransform(SFX[2].name, Module.transform);
@@ -605,7 +639,7 @@ public partial class ForgetsUltimateShowdownScript : MonoBehaviour
         {
             text = text + t;
             ModuleTexts[1].text = text;
-            yield return new WaitForSeconds(.05f);
+            yield return new WaitForSecondsRealtime(.05f);
         }
         
         _animating = false;
