@@ -111,7 +111,7 @@ namespace ForgetsUltimateShowdownModule
                         break;
                     case 26:
                         AddFunction(
-                            (i) => Sum(number[i], ((i == 0 || i == 1 ? number[i] : answer[i - 2]) + bottomNumber[i] * 2)));
+                            (i) => Sum(number[i], ((i == 0 || i == 1 ? number[i] : answer[i - 2]) + bottomNumber[i]) * 2));
                         break;
                     case 27:
                         AddFunction(
