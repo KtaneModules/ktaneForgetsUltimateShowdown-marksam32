@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Linq;
-using System.Collections.Generic;
 using KModkit;
 using UnityEngine;
 
@@ -41,8 +40,9 @@ namespace ForgetsUltimateShowdownModule
 
             for (var x = 0; x < calculationNumber.Length; x++)
             {
-                bool hasSwapped = false;
-                var finalStageNumbers = calculationNumber[x];
+                var hasSwapped = false;
+                var finalStageNumbers = new int[5];
+                calculationNumber[x].CopyTo(finalStageNumbers, 0);
 
                 var lastDigitInSerial = bombInfo.GetSerialNumberNumbers().Any() ? bombInfo.GetSerialNumberNumbers().Last() : 0;
                 var firstDigitInSerial =
