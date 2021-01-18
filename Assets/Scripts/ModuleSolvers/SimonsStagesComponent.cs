@@ -57,7 +57,7 @@ namespace ForgetsUltimateShowdownModule
 
 		private int Opposite(int i)
 		{
-			var number = int.Parse(i.ToString());
+			var number = i;
 			if (opposites[0].Any(x => x == number))
 			{
 				return opposites[1][opposites[0].IndexOf(number)];

@@ -62,15 +62,8 @@ public partial class ForgetsUltimateShowdownScript : MonoBehaviour
     private string _bottomNumber;
     private string _answer; 
     private List<IFUSComponentSolver> _usedMethods = new List<IFUSComponentSolver>();
-    private List<GameObject> _usedObjects = new List<GameObject>();
 
     private Pair<string, string> _initialNumbers;
-
-    private Coroutine _forgetMeLaterCycle;
-    private bool _fmlCycleRunning;
-    
-    private Coroutine _andCycle;
-    private bool _andCycleRunning;
 
     private bool _showingInfo;
     private bool _hasBeenStarted;
@@ -80,7 +73,7 @@ public partial class ForgetsUltimateShowdownScript : MonoBehaviour
     private int _pressIndex;
     private List<int> _presses = new List<int>();
 
-    private const string _version = "1.05";
+    private const string _version = "1.1";
 
     // Use this for initialization
     void Start()
@@ -99,17 +92,13 @@ public partial class ForgetsUltimateShowdownScript : MonoBehaviour
             NumberButtons[i].OnInteract += ButtonHandler(i);
         }
 
-        ResetAndGenerate();
+        Generate();
     }
 
-    private void ResetAndGenerate()
+    private void Generate()
     {
-        _hasBeenStarted = false;
         var methods = new List<IFUSComponentSolver>();
         var componentInfo = new ComponentInfo();
-        _usedObjects.ForEach(x => x.SetActive(false));
-        _usedObjects = new List<GameObject>();
-        _presses = new List<int>();
         var possible = new List<IFUSComponentSolver>
         {
             new ForgetMeNotComponent(),
@@ -140,8 +129,7 @@ public partial class ForgetsUltimateShowdownScript : MonoBehaviour
         {
             var obj = GetObject(_usedMethods[i], i);
             obj.SetActive(true);
-            _usedObjects.Add(obj);
-            
+
             switch (_usedMethods[i].Id)
             {
                 case MethodId.ForgetMeNot:
@@ -206,18 +194,12 @@ public partial class ForgetsUltimateShowdownScript : MonoBehaviour
                     break;
                 case MethodId.ForgetMeLater:
                     var ruleNums = Enumerable.Range(0, 60).ToList().Shuffle().Take(12).ToList();
+                    //testing purposes
                     //ruleNums = new List<int>{57, 57, 57, 57,57, 57,57,57,57, 57,57,57};
                     _logger.LogMessage("Forget Me Later:");
                     _logger.LogMessage("The chosen rules are: {0}.", ruleNums.Join(", "));
                     componentInfo.Rules = ruleNums;
-                    if (_fmlCycleRunning)
-                    {
-                        _fmlCycleRunning = false;
-                        StopCoroutine(_forgetMeLaterCycle);
-                    }
-                    _forgetMeLaterCycle = null;
-                    _forgetMeLaterCycle =
-                        StartCoroutine(ForgetMeLaterCycle(ruleNums, obj.GetComponentInChildren<TextMesh>()));
+                    StartCoroutine(ForgetMeLaterCycle(ruleNums, obj.GetComponentInChildren<TextMesh>()));
                     break;
                 case MethodId.AND:
                     var logicGates = new List<ANDLogicGate>();
@@ -229,15 +211,7 @@ public partial class ForgetsUltimateShowdownScript : MonoBehaviour
                     
                     _logger.LogMessage("A>N<D:");
                     _logger.LogMessage("The chosen logic gates are: {0}", logicGates.Join(", "));
-                    
-                    if (_andCycleRunning)
-                    {
-                        _andCycleRunning = false;
-                        StopCoroutine(_andCycle);
-                    }
-                    _andCycle = null;
-                    _andCycle =
-                        StartCoroutine(ANDCycle(logicGates, obj.GetComponentInChildren<TextMesh>()));
+                    StartCoroutine(ANDCycle(logicGates, obj.GetComponentInChildren<TextMesh>()));
                     break;
                 case MethodId.ForgetEverything:
                     var colors = new List<ForgetEverythingColor>
@@ -327,14 +301,14 @@ public partial class ForgetsUltimateShowdownScript : MonoBehaviour
             Module.HandleStrike();
             Audio.PlaySoundAtTransform(SFX[6].name, Module.transform);
             _currentInputtedText = "------------";
-            ResetAndGenerate();
+            _hasBeenStarted = false;
+            _presses = new List<int>();
             return;
         }
         if (_pressIndex == 0)
         {
             Audio.PlaySoundAtTransform(SFX[5].name, Module.transform);
         }
-        _logger.LogMessage("That is correct.");
         AddToDashedText(i, _pressIndex);
         _pressIndex++;
 
@@ -447,7 +421,6 @@ public partial class ForgetsUltimateShowdownScript : MonoBehaviour
 
     private IEnumerator ForgetMeLaterCycle(List<int> rules, TextMesh textMesh)
     {
-        _fmlCycleRunning = true;
         while (true)
         {
             textMesh.text = string.Empty;
@@ -457,12 +430,15 @@ public partial class ForgetsUltimateShowdownScript : MonoBehaviour
                 textMesh.text = rules[i].ToString();
                 yield return new WaitForSeconds(0.8f);
             }
+            if (_isSolved)
+            {
+                yield break;
+            }
         }
     }
     
     private IEnumerator ANDCycle(List<ANDLogicGate> gates, TextMesh textMesh)
     {
-        _andCycleRunning = true;
         while (true)
         {
             textMesh.text = string.Empty;
@@ -471,6 +447,11 @@ public partial class ForgetsUltimateShowdownScript : MonoBehaviour
             {
                 textMesh.text = _andLogicGateChars[(int)gates[i]].ToString();
                 yield return new WaitForSeconds(1f);
+            }
+
+            if (_isSolved)
+            {
+                yield break;
             }
         }
     }
