@@ -21,7 +21,7 @@ namespace ForgetsUltimateShowdownModule
 				switch (i)
 				{
 					case 0:
-						if (bombInfo.IsIndicatorOff(Indicator.MSA))
+						if (bombInfo.IsIndicatorOff(Indicator.CAR))
 						{
 							_logger.LogMessage("Number {0}, rule 1 applies.", i + 1);
 							answer.Add(Sum(nr, 2));
