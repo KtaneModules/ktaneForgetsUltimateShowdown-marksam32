@@ -73,7 +73,7 @@ public partial class ForgetsUltimateShowdownScript : MonoBehaviour
     private int _pressIndex;
     private List<int> _presses = new List<int>();
 
-    private const string _version = "1.11";
+    private const string _version = "1.12";
 
     // Use this for initialization
     void Start()
@@ -137,16 +137,15 @@ public partial class ForgetsUltimateShowdownScript : MonoBehaviour
                     _logger.LogMessage("There isn't anything you need to know here...");
                     break;
                 case MethodId.ForgetInfinity:
-                    var ignored1 = rnd.Range(1, 13);
-                    var ignored2 = rnd.Range(1, 13);
+                    var ignored = new Pair<int,int>(rnd.Range(1, 13), rnd.Range(1, 13));
                     _logger.LogMessage("Forget Infinity:");
-                    _logger.LogMessage("The two ignores numbers were {0} and {1}.", ignored1, ignored2);
-                    while (ignored1 == ignored2)
+                    while (ignored.Item1 == ignored.Item2)
                     {
-                        ignored2 = rnd.Range(1, 13);
+                        ignored.Item2 = rnd.Range(1, 13);
                     }
-                    componentInfo.IgnoredNumbers = new Pair<int, int>(ignored1, ignored2);
-                    obj.GetComponentInChildren<TextMesh>().text = string.Format("{0} / {1}", ignored1, ignored2);
+                    _logger.LogMessage("The two ignores numbers were {0} and {1}.", ignored.Item1, ignored.Item2);
+                    componentInfo.IgnoredNumbers = ignored;
+                    obj.GetComponentInChildren<TextMesh>().text = string.Format("{0} / {1}", ignored.Item1, ignored.Item2);
                     break;
                 case MethodId.ForgetMeNow:
                     var startingNumber = rnd.Range(0, 100);
