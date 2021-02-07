@@ -24,6 +24,19 @@ public partial class ForgetsUltimateShowdownScript
                 yield break;
             }
             var presses = match.Groups[1].ToString().Replace(" ", string.Empty).Split().Join("");
+            if (!_hasBeenStarted && (presses.Length > 1 || presses[0] != '0'))
+            {
+                yield return "sendtochaterror Please start the module before submitting anything!";
+                yield break;
+            }
+            if (_showingInfo)
+            {
+                if (presses.Length > 1 || presses[0] != '0')
+                {
+                    yield return "sendtochaterror You can't submit when the module is showing info!";
+                    yield break;
+                }
+            }
             var selectables = new List<KMSelectable>();
             foreach (var press in presses)
             {
@@ -37,7 +50,6 @@ public partial class ForgetsUltimateShowdownScript
                         break;
                 }
             }
-
             foreach (var press in selectables)
             {
                 yield return "trycancel";
