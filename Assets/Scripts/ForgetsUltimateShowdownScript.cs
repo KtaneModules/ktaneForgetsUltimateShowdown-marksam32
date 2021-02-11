@@ -73,15 +73,40 @@ public partial class ForgetsUltimateShowdownScript : MonoBehaviour
     private int _pressIndex;
     private List<int> _presses = new List<int>();
 
-    private const string _version = "1.13";
+    private const string _version = "1.14";
 
     // Use this for initialization
     void Start()
     {
         _moduleId = _moduleIdCounter++;
         _logger = new FUSLogger(_moduleId);
+        var possible = new List<IFUSComponentSolver>
+        {
+            new ForgetMeNotComponent(),
+            new ForgetMeLaterComponent(),
+            new ANDComponent(),
+            new ForgetMeNowComponent(),
+            new ForgetInfinityComponent(),
+            new ForgetEverythingComponent(),
+            new SimonsStagesComponent()
+        };
+        var methods = new List<IFUSComponentSolver>();
+        for (var i = 0; i < 6; i++)
+        {
+            var method = possible.PickRandom();
+            possible.Remove(method);
+            methods.Add(method);
+        }
+        _usedMethods = methods;
+        if (_usedMethods.Select(x => x.Id).Contains(MethodId.SimonsStages))
+        {
+            Audio.PlaySoundAtTransform(_usedMethods.Select(x => x.Id).Contains(MethodId.AND) ? SFX[rnd.Range(0, 2) == 0 ? 0 : 7].name : SFX[0].name, Module.transform);
+        }
+        else
+        {
+            Audio.PlaySoundAtTransform(SFX[7].name, Module.transform);            
+        }
         Module.OnActivate += Activate;
-        Audio.PlaySoundAtTransform(SFX[0].name, Module.transform);
     }
 
     private void Activate()
@@ -97,27 +122,8 @@ public partial class ForgetsUltimateShowdownScript : MonoBehaviour
 
     private void Generate()
     {
-        var methods = new List<IFUSComponentSolver>();
+        var methods = _usedMethods;
         var componentInfo = new ComponentInfo();
-        var possible = new List<IFUSComponentSolver>
-        {
-            new ForgetMeNotComponent(),
-            new ForgetMeLaterComponent(),
-            new ANDComponent(),
-            new ForgetMeNowComponent(),
-            new ForgetInfinityComponent(),
-            new ForgetEverythingComponent(),
-            new SimonsStagesComponent()
-        };
-        
-        for (var i = 0; i < 6; i++)
-        {
-            var method = possible.PickRandom();
-            possible.Remove(method);
-            methods.Add(method);
-        }
-
-        _usedMethods = methods;
         _initialNumber = GenerateNumber();
         _bottomNumber = GenerateNumber();
 
@@ -406,18 +412,6 @@ public partial class ForgetsUltimateShowdownScript : MonoBehaviour
         return builder.ToString();
     }
 
-    private string GetDashDisplay()
-    {
-        var builder = new StringBuilder("---");
-        for (int i = 0; i < 3; i++)
-        {
-            builder.Append(" ");
-            builder.Append("---");
-        }
-        
-        return builder.ToString();
-    }
-
     private IEnumerator ForgetMeLaterCycle(List<int> rules, TextMesh textMesh)
     {
         while (true)
@@ -479,7 +473,7 @@ public partial class ForgetsUltimateShowdownScript : MonoBehaviour
         
         EncProcess.SetActive(true);
         ButtonsObject.SetActive(false);
-        yield return new WaitForSecondsRealtime(1.5f);
+        yield return new WaitForSeconds(1.5f);
 
         for (float x = 0; x <= 1; x = Mathf.Min(x + 1 * Time.deltaTime, 1))
         {
@@ -493,7 +487,7 @@ public partial class ForgetsUltimateShowdownScript : MonoBehaviour
             }
             yield return new WaitForSeconds(Time.deltaTime);
         }
-        yield return new WaitForSecondsRealtime(.6f);
+        yield return new WaitForSeconds(.6f);
         StartCoroutine(WriteText());
     }
 
@@ -519,7 +513,7 @@ public partial class ForgetsUltimateShowdownScript : MonoBehaviour
 
         EncProcess.SetActive(false);
         ButtonsObject.SetActive(true);
-        yield return new WaitForSecondsRealtime(1.5f);
+        yield return new WaitForSeconds(1.5f);
 
         for (float x = 0; x <= 1; x = Mathf.Min(x + 1 * Time.deltaTime, 1))
         {
@@ -534,7 +528,7 @@ public partial class ForgetsUltimateShowdownScript : MonoBehaviour
             yield return new WaitForSeconds(Time.deltaTime);
         }
         
-        yield return new WaitForSecondsRealtime(0.6f);
+        yield return new WaitForSeconds(0.6f);
         StartCoroutine(ClearOnSumbitModeText());
     }
 
@@ -575,7 +569,7 @@ public partial class ForgetsUltimateShowdownScript : MonoBehaviour
         {
             text = text + t;
             ModuleTexts[1].text = text;
-            yield return new WaitForSecondsRealtime(.03f);
+            yield return new WaitForSeconds(.03f);
         }
 
         _animating = false;
@@ -591,7 +585,7 @@ public partial class ForgetsUltimateShowdownScript : MonoBehaviour
         {
             currentText = currentText.Substring(0, currentText.Length - 1);
             ModuleTexts[1].text = currentText;
-            yield return new WaitForSecondsRealtime(.03f);
+            yield return new WaitForSeconds(.03f);
         }
 
         _animating = false;
@@ -606,20 +600,20 @@ public partial class ForgetsUltimateShowdownScript : MonoBehaviour
         {
             currentText = currentText.Substring(0, currentText.Length - 1);
             ModuleTexts[1].text = currentText;
-            yield return new WaitForSecondsRealtime(.03f);
+            yield return new WaitForSeconds(.03f);
             if (i == 23)
             {
                 Audio.PlaySoundAtTransform(SFX[2].name, Module.transform);
             }
         }
 
-        var dashText = GetDashDisplay();
+        var dashText = "--- --- --- ---";
         var text = string.Empty;
         foreach (var t in dashText)
         {
             text = text + t;
             ModuleTexts[1].text = text;
-            yield return new WaitForSecondsRealtime(.05f);
+            yield return new WaitForSeconds(.05f);
         }
         
         _animating = false;
