@@ -122,14 +122,13 @@ public partial class ForgetsUltimateShowdownScript : MonoBehaviour
 
     private void Generate()
     {
-        var methods = _usedMethods;
         var componentInfo = new ComponentInfo();
         _initialNumber = GenerateNumber();
         _bottomNumber = GenerateNumber();
 
         _logger.LogMessage("The initial number is: {0}", _initialNumber);
         _logger.LogMessage("The bottom number is: {0}", _bottomNumber);
-        _logger.LogMessage("The chosen methods are: {0}", methods.Select(x => x.Name).Join(", "));
+        _logger.LogMessage("The chosen methods are: {0}", _usedMethods.Select(x => x.Name).Join(", "));
 
         for (var i = 0; i < 6; i++)
         {
@@ -243,8 +242,8 @@ public partial class ForgetsUltimateShowdownScript : MonoBehaviour
 
         for (var i = 0; i < 6; i++)
         {
-            numberInfo.Number = methods[i].Encrypt(Info, componentInfo, numberInfo);
-            _logger.LogMessage("After step {0}({1}) of the encryption, the number is: {2}", i + 1, methods[i].Name, numberInfo.Number);
+            numberInfo.Number = _usedMethods[i].Encrypt(Info, componentInfo, numberInfo);
+            _logger.LogMessage("After step {0}({1}) of the encryption, the number is: {2}", i + 1, _usedMethods[i].Name, numberInfo.Number);
             if (numberInfo.Number.Length != 12)
             {
                 throw new InvalidOperationException("Invalid length of a number, please report this logfile to Marksam!");
@@ -322,7 +321,15 @@ public partial class ForgetsUltimateShowdownScript : MonoBehaviour
             _logger.LogMessage("Module solved!");
             _isSolved = true;
             Module.HandlePass();
-            Audio.PlaySoundAtTransform(SFX[rnd.Range(3,5)].name, Module.transform);
+            if (_usedMethods.Select(x => x.Id).Contains(MethodId.SimonsStages))
+            {
+                Audio.PlaySoundAtTransform(_usedMethods.Select(x => x.Id).Contains(MethodId.AND) ? SFX[rnd.Range(3, 5)].name : SFX[4].name, Module.transform);
+            }
+            else
+            {
+                Audio.PlaySoundAtTransform(SFX[3].name, Module.transform);
+            }
+
             StartCoroutine(DoSmallDisplaySolve());
             StartCoroutine(ClearText());
         }
