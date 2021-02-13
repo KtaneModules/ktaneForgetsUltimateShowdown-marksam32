@@ -73,9 +73,9 @@ public partial class ForgetsUltimateShowdownScript : MonoBehaviour
     private int _pressIndex;
     private List<int> _presses = new List<int>();
 
-    private const string _version = "1.14";
+    private const string _version = "1.15";
 
-    // Use this for initialization
+    // Use this for initializatihon
     void Start()
     {
         _moduleId = _moduleIdCounter++;
@@ -303,7 +303,10 @@ public partial class ForgetsUltimateShowdownScript : MonoBehaviour
             _logger.LogMessage("That is incorrect, strike and reset!");
             _pressIndex = 0;
             Module.HandleStrike();
-            Audio.PlaySoundAtTransform(SFX[6].name, Module.transform);
+            if (_usedMethods.Select(x => x.Id).Contains(MethodId.ForgetMeNow))
+            {
+                Audio.PlaySoundAtTransform(SFX[6].name, Module.transform);   
+            }
             _currentInputtedText = "------------";
             _hasBeenStarted = false;
             _presses = new List<int>();
@@ -311,7 +314,10 @@ public partial class ForgetsUltimateShowdownScript : MonoBehaviour
         }
         if (_pressIndex == 0)
         {
-            Audio.PlaySoundAtTransform(SFX[5].name, Module.transform);
+            if (_usedMethods.Select(x => x.Id).Contains(MethodId.ForgetMeNow))
+            {
+                Audio.PlaySoundAtTransform(SFX[5].name, Module.transform);   
+            }
         }
         AddToDashedText(i, _pressIndex);
         _pressIndex++;
