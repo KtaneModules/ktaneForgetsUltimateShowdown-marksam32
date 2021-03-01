@@ -21,6 +21,9 @@ namespace ForgetsUltimateShowdownModule
 
 		//Stages
 		public SimonsStagesColor SimonsStagesColor { get; set; }
+		
+		//FUN
+		public List<int> Positions { get; set; }
 	}
 }
 

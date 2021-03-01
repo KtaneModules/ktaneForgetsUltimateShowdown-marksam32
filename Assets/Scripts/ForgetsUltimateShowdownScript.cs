@@ -24,6 +24,7 @@ public partial class ForgetsUltimateShowdownScript : MonoBehaviour
     public GameObject[] ForgetInfinityObjects;
     public GameObject[] ANDObjects;
     public GameObject[] ForgetMeNowObjects;
+    public GameObject[] ForgetUsNotObjects;
 
     public AudioClip[] SFX; //0 FML
     
@@ -73,7 +74,7 @@ public partial class ForgetsUltimateShowdownScript : MonoBehaviour
     private int _pressIndex;
     private List<int> _presses = new List<int>();
 
-    private const string _version = "1.15";
+    private const string _version = "1.2";
 
     // Use this for initializatihon
     void Start()
@@ -88,7 +89,8 @@ public partial class ForgetsUltimateShowdownScript : MonoBehaviour
             new ForgetMeNowComponent(),
             new ForgetInfinityComponent(),
             new ForgetEverythingComponent(),
-            new SimonsStagesComponent()
+            new SimonsStagesComponent(),
+            new ForgetUsNotComponent()
         };
         var methods = new List<IFUSComponentSolver>();
         for (var i = 0; i < 6; i++)
@@ -232,6 +234,13 @@ public partial class ForgetsUltimateShowdownScript : MonoBehaviour
                     obj.GetComponent<MeshRenderer>().materials[2].color = _forgetEverythingLedColors[(int)colors[1]];
                     obj.GetComponent<MeshRenderer>().materials[3].color = _forgetEverythingLedColors[(int)colors[2]];
                     break;
+                case MethodId.ForgetUsNot:
+                    var positions = Enumerable.Range(1, 12).ToList().Shuffle();
+                    componentInfo.Positions = positions;
+                    _logger.LogMessage("Forget Us Not:");
+                    _logger.LogMessage("The positions are: {0}", positions.Join(", "));
+                    StartCoroutine(ForgetUsNotCycle(positions, obj.GetComponentInChildren<TextMesh>()));
+                    break;
                 default:
                     throw new InvalidOperationException(string.Format("Invalid id {0}", _usedMethods[i].Id));
             }
@@ -359,6 +368,8 @@ public partial class ForgetsUltimateShowdownScript : MonoBehaviour
                 return ANDObjects[position];
             case MethodId.ForgetEverything:
                 return ForgetEverythingObjects[position];
+            case MethodId.ForgetUsNot:
+                return ForgetUsNotObjects[position];
             default:
                 throw new InvalidOperationException(string.Format("Invalid name {0}", method.Name));
         }
@@ -435,6 +446,24 @@ public partial class ForgetsUltimateShowdownScript : MonoBehaviour
             {
                 textMesh.text = rules[i].ToString();
                 yield return new WaitForSeconds(0.8f);
+            }
+            if (_isSolved)
+            {
+                yield break;
+            }
+        }
+    }
+    
+    private IEnumerator ForgetUsNotCycle(List<int> positions, TextMesh textMesh)
+    {
+        while (true)
+        {
+            textMesh.text = string.Empty;
+            yield return new WaitForSeconds(0.8f);
+            for (var i = 0; i < 12; i++)
+            {
+                textMesh.text = positions[i].ToString();
+                yield return new WaitForSeconds(0.83f);
             }
             if (_isSolved)
             {

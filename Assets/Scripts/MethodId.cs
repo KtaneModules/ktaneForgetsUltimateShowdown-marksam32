@@ -8,6 +8,7 @@
 		ForgetMeNot,
 		ForgetInfinity,
 		ForgetMeNow,
-		ForgetEverything
+		ForgetEverything,
+		ForgetUsNot
 	}
 }
