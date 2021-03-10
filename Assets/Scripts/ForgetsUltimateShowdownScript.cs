@@ -74,7 +74,7 @@ public partial class ForgetsUltimateShowdownScript : MonoBehaviour
     private int _pressIndex;
     private List<int> _presses = new List<int>();
 
-    private const string _version = "1.2";
+    private const string _version = "1.21";
 
     // Use this for initializatihon
     void Start()
@@ -92,14 +92,30 @@ public partial class ForgetsUltimateShowdownScript : MonoBehaviour
             new SimonsStagesComponent(),
             new ForgetUsNotComponent()
         };
-        var methods = new List<IFUSComponentSolver>();
+        var methods = new List<int>();
         for (var i = 0; i < 6; i++)
         {
-            var method = possible.PickRandom();
-            possible.Remove(method);
+            var method = rnd.Range(0, 8);
+            while(methods.Contains(method) || method == 1 && methods.Contains(2) || method == 2 && methods.Contains(1))
+            {
+                method = rnd.Range(0, 8);
+            }
             methods.Add(method);
         }
-        _usedMethods = methods;
+
+        if (methods.Contains(7) && methods.IndexOf(7) > 1)
+        {
+            var method = rnd.Range(0, 2);
+            var previous = methods.IndexOf(7);
+            var first = methods[method];
+            methods[method] = methods[previous];
+            methods[previous] = first;
+        }
+        for (var i = 0; i < 6; i++)
+        {
+            _usedMethods.Add(possible[methods[i]]);
+        }
+
         if (_usedMethods.Select(x => x.Id).Contains(MethodId.SimonsStages))
         {
             Audio.PlaySoundAtTransform(_usedMethods.Select(x => x.Id).Contains(MethodId.AND) ? SFX[rnd.Range(0, 2) == 0 ? 0 : 7].name : SFX[0].name, Module.transform);
