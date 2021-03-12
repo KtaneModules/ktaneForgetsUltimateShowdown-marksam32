@@ -245,7 +245,7 @@ namespace ForgetsUltimateShowdownModule
 
         private static int Sum(int number, int add)
         {
-            return Math.Abs((number + add) % 10);
+            return (number + Math.Abs(add)) % 10;
         }
 
         private void AddFunction(Func<int, int> func)
