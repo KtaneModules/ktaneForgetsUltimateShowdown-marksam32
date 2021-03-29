@@ -23,6 +23,6 @@ MonoBehaviour:
     id: ForgetsUltimateShowdownModule\r\nGithub: https://github.com/marksam32/ktaneForgetsUltimateShowdown\r\n\r\nIf
     you want to report any bugs or typos in the manual or in the module, please contact
     me on discord: Marksam32#6669"
-  version: 1.22
+  version: 1.23
   outputFolder: build
   previewImage: {fileID: 2800000, guid: e2dd4d65a0de7e04bbc8c71250c7dae7, type: 3}

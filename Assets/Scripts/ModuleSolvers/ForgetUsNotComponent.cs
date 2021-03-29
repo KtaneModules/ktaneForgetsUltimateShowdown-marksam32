@@ -17,6 +17,7 @@ namespace ForgetsUltimateShowdownModule
             var initialNumber = numberInfo.Number;
             var numbers = new List<string>();
             var finalnumbers = new int[12];
+            _logger.LogMessage("------Start of Forget Us Not------");
             for (var i = 0; i < 12; ++i)
             {
                 numbers.Add(initialNumber.Take(3).Join(""));

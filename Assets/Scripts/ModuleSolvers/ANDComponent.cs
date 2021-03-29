@@ -2,35 +2,11 @@
 using System.Linq;
 using System.Collections.Generic;
 
-
 namespace ForgetsUltimateShowdownModule
 {
     public class ANDComponent : IFUSComponentSolver
     {
-        private int _modId;
-
-        private static readonly List<List<bool>> _binaryChart = new List<List<bool>>
-        {
-            new List<bool> {false, false, false, false}, // 0
-            new List<bool> {false, false, false, true}, // 1
-            new List<bool> {false, false, true, false}, // 2
-            new List<bool> {false, false, true, true}, // 3
-            new List<bool> {false, true, false, false}, // 4
-            new List<bool> {false, true, false, true}, // 5
-            new List<bool> {false, true, true, false}, // 6
-            new List<bool> {false, true, true, true}, // 7
-            new List<bool> {true, false, false, false}, // 8
-            new List<bool> {true, false, false, true}, // 9
-            new List<bool> {true, false, true, false}, // 10
-            new List<bool> {true, false, true, true}, // 11
-            new List<bool> {true, true, false, false}, // 12
-            new List<bool> {true, true, false, true}, // 13
-            new List<bool> {true, true, true, false}, // 14
-            new List<bool> {true, true, true, true}  // 15
-        };
-
         private FUSLogger _logger;
-
         public string Encrypt(KMBombInfo bombInfo, ComponentInfo componentInfo, NumberInfo numberInfo)
         {
             var answer = new List<int>();
@@ -43,8 +19,8 @@ namespace ForgetsUltimateShowdownModule
             for (int i = 0; i < 12; i++)
             {
                 _logger.LogMessage("Digit {0}:", i + 1);
-                var bits1 = _binaryChart[int.Parse(number[i].ToString())];
-                var bits2 = _binaryChart[int.Parse(bottomNumber[i].ToString())];
+                var bits1 = Convert.ToString(number[i], 2).TakeLast(4).Select(x => x == '1').ToArray();
+                var bits2 = Convert.ToString(bottomNumber[i], 2).TakeLast(4).Select(x => x == '1').ToArray();
                 _logger.LogMessage("The first digit is: {0}, and that in binary is: {1}", number[i],
                     bits1.Select(x => x ? "1" : "0").Join(""));
                 _logger.LogMessage("The second digit is: {0}, and that in binary is: {1}", bottomNumber[i],

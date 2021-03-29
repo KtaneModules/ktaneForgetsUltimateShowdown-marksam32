@@ -7,7 +7,6 @@ namespace ForgetsUltimateShowdownModule
     public class ForgetEverythingComponent : IFUSComponentSolver
     {
         private FUSLogger _logger;
-        private int _modId;
         public string Encrypt(KMBombInfo bombInfo, ComponentInfo componentInfo, NumberInfo numberInfo)
         {
             var answer = new List<int>();

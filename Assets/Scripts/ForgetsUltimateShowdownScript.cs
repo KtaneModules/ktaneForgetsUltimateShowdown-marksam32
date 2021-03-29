@@ -61,8 +61,9 @@ public partial class ForgetsUltimateShowdownScript : MonoBehaviour
 
     private string _initialNumber;
     private string _bottomNumber;
-    private string _answer; 
-    private List<IFUSComponentSolver> _usedMethods = new List<IFUSComponentSolver>();
+    private string _answer;
+    private SimonsStagesColor _chosenColor;
+    private readonly List<IFUSComponentSolver> _usedMethods = new List<IFUSComponentSolver>();
 
     private Pair<string, string> _initialNumbers;
 
@@ -74,7 +75,7 @@ public partial class ForgetsUltimateShowdownScript : MonoBehaviour
     private int _pressIndex;
     private List<int> _presses = new List<int>();
 
-    private const string _version = "1.22";
+    private const string _version = "1.23";
 
     // Use this for initializatihon
     void Start()
@@ -103,10 +104,24 @@ public partial class ForgetsUltimateShowdownScript : MonoBehaviour
             methods.Add(method);
         }
 
-        if (methods.Contains(7) && methods.IndexOf(7) > 1)
+        var simonStagesColor = (SimonsStagesColor) rnd.Range(0, 6);
+        if ((methods.Contains(7) && methods.IndexOf(7) > 1))
         {
             var method = rnd.Range(0, 2);
             var previous = methods.IndexOf(7);
+            var first = methods[method];
+            methods[method] = methods[previous];
+            methods[previous] = first;
+        }
+
+        if (methods.Contains(6) && new[]{SimonsStagesColor.Blue, SimonsStagesColor.Lime}.Contains(simonStagesColor) && methods.IndexOf(6) > 1)
+        {
+            var method = rnd.Range(0, 2);
+            if (methods[method] == 7)
+            {
+                method = method == 0 ? 1 : 0;
+            }
+            var previous = methods.IndexOf(6);
             var first = methods[method];
             methods[method] = methods[previous];
             methods[previous] = first;
@@ -124,6 +139,8 @@ public partial class ForgetsUltimateShowdownScript : MonoBehaviour
         {
             Audio.PlaySoundAtTransform(SFX[7].name, Module.transform);            
         }
+
+        _chosenColor = simonStagesColor;
         Module.OnActivate += Activate;
     }
 
@@ -166,7 +183,7 @@ public partial class ForgetsUltimateShowdownScript : MonoBehaviour
                     {
                         ignored.Item2 = rnd.Range(1, 13);
                     }
-                    _logger.LogMessage("The two ignores numbers were {0} and {1}.", ignored.Item1, ignored.Item2);
+                    _logger.LogMessage("The two ignored numbers are {0} and {1}.", ignored.Item1, ignored.Item2);
                     componentInfo.IgnoredNumbers = ignored;
                     obj.GetComponentInChildren<TextMesh>().text = string.Format("{0} / {1}", ignored.Item1, ignored.Item2);
                     break;
@@ -179,7 +196,7 @@ public partial class ForgetsUltimateShowdownScript : MonoBehaviour
                     obj.GetComponentInChildren<TextMesh>().text = startingNumber.ToString("D2");
                     break;
                 case MethodId.SimonsStages:
-                    var chosenColor = (SimonsStagesColor) rnd.Range(0, 6);
+                    var chosenColor = _chosenColor;
                     obj.GetComponentInChildren<TextMesh>().text = chosenColor.ToString().First().ToString();
                     componentInfo.SimonsStagesColor = chosenColor;
                     _logger.LogMessage("Simon's Stages:");
@@ -246,9 +263,10 @@ public partial class ForgetsUltimateShowdownScript : MonoBehaviour
                     _logger.LogMessage("Forget Everything:");
                     _logger.LogMessage("The chosen colors are: {0}", colors.Join(", "));
                     componentInfo.FEColors = colors;
-                    obj.GetComponent<MeshRenderer>().materials[1].color = _forgetEverythingLedColors[(int)colors[0]];
-                    obj.GetComponent<MeshRenderer>().materials[2].color = _forgetEverythingLedColors[(int)colors[1]];
-                    obj.GetComponent<MeshRenderer>().materials[3].color = _forgetEverythingLedColors[(int)colors[2]];
+                    for (int j = 0; j < 3; j++)
+                    {
+                        obj.GetComponent<MeshRenderer>().materials[j + 1].color = _forgetEverythingLedColors[(int)colors[j]];
+                    }
                     break;
                 case MethodId.ForgetUsNot:
                     var positions = Enumerable.Range(1, 12).ToList().Shuffle();
