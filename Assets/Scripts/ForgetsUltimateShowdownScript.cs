@@ -53,6 +53,14 @@ public partial class ForgetsUltimateShowdownScript : MonoBehaviour
         new Color(0, 0.6f, 0, 1),
         new Color(0, 0.3f, 1, 1)
     };
+
+    private static readonly List<List<Pair<Vector3, float>>> _forgetEverythingPositions = new List<List<Pair<Vector3, float>>>
+    {
+        new List<Pair<Vector3, float>> { new Pair<Vector3, float>(new Vector3(0f, -0.3f, 0.783f), -90f), new Pair<Vector3, float>(new Vector3(-0.594f, -0.3f, 0.012f), 180f) }, //tl
+        new List<Pair<Vector3, float>> { new Pair<Vector3, float>(new Vector3(0f, -0.3f, 0.783f), -90f), new Pair<Vector3, float>(new Vector3(0.594f, -0.3f, 0.012f), 0f) }, //tr
+        new List<Pair<Vector3, float>> { new Pair<Vector3, float>(new Vector3(0f, -0.3f, -0.783f), 90f), new Pair<Vector3, float>(new Vector3(-0.594f, -0.3f, -0.12f), 180f) }, //bl
+        new List<Pair<Vector3, float>> { new Pair<Vector3, float>(new Vector3(0f, -0.3f, -0.783f), 90f), new Pair<Vector3, float>(new Vector3(0.594f, -0.3f, -0.12f), 0f) } //br
+    };
     
     private static readonly List<char> _andLogicGateChars = new List<char>
     {
@@ -75,7 +83,7 @@ public partial class ForgetsUltimateShowdownScript : MonoBehaviour
     private int _pressIndex;
     private List<int> _presses = new List<int>();
 
-    private const string _version = "1.23";
+    private const string _version = "1.3";
 
     // Use this for initializatihon
     void Start()
@@ -94,7 +102,7 @@ public partial class ForgetsUltimateShowdownScript : MonoBehaviour
             new ForgetUsNotComponent()
         };
         var methods = new List<int>();
-        for (var i = 0; i < 6; i++)
+        for (var i = 0; i < 4; i++)
         {
             var method = rnd.Range(0, 8);
             while(methods.Contains(method) || method == 1 && methods.Contains(2) || method == 2 && methods.Contains(1))
@@ -126,7 +134,7 @@ public partial class ForgetsUltimateShowdownScript : MonoBehaviour
             methods[method] = methods[previous];
             methods[previous] = first;
         }
-        for (var i = 0; i < 6; i++)
+        for (var i = 0; i < 4; i++)
         {
             _usedMethods.Add(possible[methods[i]]);
         }
@@ -165,7 +173,7 @@ public partial class ForgetsUltimateShowdownScript : MonoBehaviour
         _logger.LogMessage("The bottom number is: {0}", _bottomNumber);
         _logger.LogMessage("The chosen methods are: {0}", _usedMethods.Select(x => x.Name).Join(", "));
 
-        for (var i = 0; i < 6; i++)
+        for (var i = 0; i < 4; i++)
         {
             var obj = GetObject(_usedMethods[i], i);
             obj.SetActive(true);
@@ -200,7 +208,7 @@ public partial class ForgetsUltimateShowdownScript : MonoBehaviour
                     obj.GetComponentInChildren<TextMesh>().text = chosenColor.ToString().First().ToString();
                     componentInfo.SimonsStagesColor = chosenColor;
                     _logger.LogMessage("Simon's Stages:");
-                    _logger.LogMessage("The rule chosen is {0}.", (chosenColor == SimonsStagesColor.Red ? "Red(nice)" : chosenColor.ToString()));
+                    _logger.LogMessage("The rule chosen is {0}.", chosenColor.ToString());
                     var lights = obj.GetComponentsInChildren<Light>();
                     var scalar = transform.lossyScale.x;
                     foreach (var l in lights)
@@ -262,6 +270,9 @@ public partial class ForgetsUltimateShowdownScript : MonoBehaviour
                     
                     _logger.LogMessage("Forget Everything:");
                     _logger.LogMessage("The chosen colors are: {0}", colors.Join(", "));
+                    var rotation = _forgetEverythingPositions[i].PickRandom();
+                    obj.transform.localPosition = rotation.Item1;
+                    obj.transform.rotation = Quaternion.Euler(0f, rotation.Item2, 0f);
                     componentInfo.FEColors = colors;
                     for (int j = 0; j < 3; j++)
                     {
@@ -283,7 +294,7 @@ public partial class ForgetsUltimateShowdownScript : MonoBehaviour
         var numberInfo = new NumberInfo(_initialNumber, _bottomNumber, _logger);
         _initialNumbers = new Pair<string, string>(numberInfo.Number, numberInfo.BottomNumber);
 
-        for (var i = 0; i < 6; i++)
+        for (var i = 0; i < 4; i++)
         {
             numberInfo.Number = _usedMethods[i].Encrypt(Info, componentInfo, numberInfo);
             _logger.LogMessage("After step {0}({1}) of the encryption, the number is: {2}", i + 1, _usedMethods[i].Name, numberInfo.Number);
