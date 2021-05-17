@@ -83,7 +83,7 @@ public partial class ForgetsUltimateShowdownScript : MonoBehaviour
     private int _pressIndex;
     private List<int> _presses = new List<int>();
 
-    private const string _version = "1.3";
+    private const string _version = "1.3.1";
 
     // Use this for initializatihon
     void Start()
