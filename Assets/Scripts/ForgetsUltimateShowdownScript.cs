@@ -272,7 +272,14 @@ public partial class ForgetsUltimateShowdownScript : MonoBehaviour
                     _logger.LogMessage("The chosen colors are: {0}", colors.Join(", "));
                     var rotation = _forgetEverythingPositions[i].PickRandom();
                     obj.transform.localPosition = rotation.Item1;
-                    obj.transform.rotation = Quaternion.Euler(0f, rotation.Item2, 0f);
+                    var eulerAngles = obj.transform.localEulerAngles;
+                    eulerAngles = new Vector3(
+                        eulerAngles.x,
+                        rotation.Item2,
+                        eulerAngles.z
+                    );
+                    obj.transform.localEulerAngles = eulerAngles;
+
                     componentInfo.FEColors = colors;
                     for (int j = 0; j < 3; j++)
                     {
