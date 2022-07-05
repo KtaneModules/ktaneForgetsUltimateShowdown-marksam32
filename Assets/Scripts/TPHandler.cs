@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
 using UnityEngine;
+using ForgetsUltimateShowdownModule;
 
 public partial class ForgetsUltimateShowdownScript
 {
@@ -10,12 +11,10 @@ public partial class ForgetsUltimateShowdownScript
         "Press button(s) using !{0} press 1234567890";
 #pragma warning restore 414
 
-    private static readonly Regex _tpRegex = new Regex("^press ([0-9 ]*)$");
-    
     private IEnumerator ProcessTwitchCommand(string command)
     {
         command = command.ToLowerInvariant().Trim();
-        var match = _tpRegex.Match(command);
+        var match = Constants.TpRegex.Match(command);
         if (match.Success)
         {
             if (_animating)
