@@ -17,12 +17,21 @@ MonoBehaviour:
   description: "No, this is not a boss module. Stop being judgeme... Oh wait that's
     already taken.\r\n\r\nCreated and impelemented by: Marksam32\r\nWith assets used
     from modules by: Speakingevil, Espik, Hexicube, Royal_Flu$h, VFlyer, Short_c1rcuit,
-    Rdzanu, Pruz, MarioXTurn and Epictho.\r\nThanks to Xarata for playtesting.\nTwitch
+    Rdzanu, Pruz, MarioXTurn and Epictho.\r\nThanks to Xarata for playtesting.\r\nTwitch
     plays is supported.\r\n\r\nManual:\r\nPDF: https://ktane.timwi.de/PDF/Forget's%20Ultimate%20Showdown.pdf\r\nHTML:
     https://ktane.timwi.de/HTML/Forget%27s%20Ultimate%20Showdown.html\r\n\r\nModule
-    id: ForgetsUltimateShowdownModule\r\nGithub: https://github.com/marksam32/ktaneForgetsUltimateShowdown\r\n\r\nIf
-    you want to report any bugs or typos in the manual or in the module, please contact
-    me on discord: Marksam32#6669"
+    id: ForgetsUltimateShowdownModule\r\nGithub: https://github.com/marksam32/ktaneForgetsUltimateShowdown\r\n\r\nMission
+    Settings:\r\nFormat:\r\n[Forget's Ultimate Showdown] METHODS=(FUN,FML,AND)|(FMN,SS)|(FI)|(FI):ORDER=FIXED\r\n\r\nMETHODS:
+    Will control the encryption methods shown on the module, the parentheses indicate
+    a group. The module will pick 1 of the methods inside of a parentheses. Separated
+    by \",\". Shortforms listed below.\r\nORDER: Will change the order of the methods
+    specified in the METHODS field. If \"FIXED\" it will be in the order you specified,
+    if \"RANDOM\" the order will be shuffled.\r\n\r\nPossible encryption methods:\r\nSS
+    - Simon's Stages\r\nFML - Forget Me Later\r\nAND - A>N<D\r\nFMN - Forget Me Not\r\nFI
+    - Forget Infinity\r\nFMW - Forget Me Now\r\nFE - Forget Everything\r\nFUN - Forget
+    Us Not\r\n\r\nThe above example will generate a module with the first encryption
+    method being Forget Me Later, A>N<D, or Forget Us Not. The second one being either
+    Forget Me Not or Simon's Stages. And the last 2 being Forget Infinity."
   version: 1.4
   outputFolder: build
   previewImage: {fileID: 2800000, guid: e2dd4d65a0de7e04bbc8c71250c7dae7, type: 3}

@@ -101,7 +101,6 @@ public partial class ForgetsUltimateShowdownScript : MonoBehaviour
             ? MissionText
             : KTMissionGetter.Mission.Description;
         
-        Debug.LogFormat(missionDesc);
         if (missionDesc == null)
             return null;
         
