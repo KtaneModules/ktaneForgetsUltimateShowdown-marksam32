@@ -50,7 +50,7 @@ namespace ForgetsUltimateShowdownModule
             54, 56, 57, 58
         };
 
-        public const string Version = "1.4";
+        public const string Version = "1.41";
 
         public static readonly Regex TpRegex = new Regex("^press ([0-9 ]*)$");
         

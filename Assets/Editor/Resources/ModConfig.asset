@@ -32,6 +32,6 @@ MonoBehaviour:
     Us Not\r\n\r\nThe above example will generate a module with the first encryption
     method being Forget Me Later, A>N<D, or Forget Us Not. The second one being either
     Forget Me Not or Simon's Stages. And the last 2 being Forget Infinity."
-  version: 1.4
+  version: 1.41
   outputFolder: build
   previewImage: {fileID: 2800000, guid: e2dd4d65a0de7e04bbc8c71250c7dae7, type: 3}

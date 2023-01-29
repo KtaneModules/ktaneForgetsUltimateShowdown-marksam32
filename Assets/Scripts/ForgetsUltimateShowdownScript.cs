@@ -37,10 +37,11 @@ public partial class ForgetsUltimateShowdownScript : MonoBehaviour
     private static int _moduleIdCounter = 1;
     private bool _isSolved;
     private bool _animating;
+    private bool _activated;
 
     private bool _interactable
     {
-        get { return !(_isSolved || _animating); }
+        get { return !(_isSolved || _animating || !_activated); }
     }
 
     private string _initialNumber;
@@ -69,6 +70,7 @@ public partial class ForgetsUltimateShowdownScript : MonoBehaviour
     {
         _moduleId = _moduleIdCounter++;
         _logger = new FUSLogger(_moduleId);
+        _logger.LogMessage("Running version {0}", Constants.Version);
         _missionSettings = GetMissionSetting();
         if (_missionSettings == null)
         {
@@ -90,8 +92,12 @@ public partial class ForgetsUltimateShowdownScript : MonoBehaviour
         {
             Audio.PlaySoundAtTransform(SFX[7].name, Module.transform);
         }
-
-
+        
+        for (var i = 0; i < NumberButtons.Length; i++)
+        {
+            NumberButtons[i].OnInteract += ButtonHandler(i);
+        }
+        
         Module.OnActivate += Activate;
     }
 
@@ -219,12 +225,7 @@ public partial class ForgetsUltimateShowdownScript : MonoBehaviour
 
     private void Activate()
     {
-        _logger.LogMessage("Running version {0}", Constants.Version);
-        for (var i = 0; i < NumberButtons.Length; i++)
-        {
-            NumberButtons[i].OnInteract += ButtonHandler(i);
-        }
-
+        _activated = true;
         Generate();
     }
 
